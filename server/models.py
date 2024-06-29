@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy_serializer import SerializerMixin
 
 db = SQLAlchemy()
@@ -11,6 +12,9 @@ class Customer(db.Model, SerializerMixin):
     
     # Establish relationship with Review
     reviews = db.relationship('Review', back_populates='customer')
+    
+    # Association proxy to get items through reviews
+    items = association_proxy('reviews', 'item')
     
     # Serialization rules
     serialize_rules = ('-reviews.customer',)  # Exclude reviews.customer
